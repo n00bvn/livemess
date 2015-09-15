@@ -1,0 +1,4 @@
+<li <%= (@message.sender == current_user.id) ? '' : 'style=text-align:right' %>>
+        <b><%= User.find(@message.sender).email %>:</b> <small><i>(<%= @message.created_at %> @<%= User.find(@message.receiver).email %>)</i></small><br/>
+        <%= @message.content %>
+      </li>

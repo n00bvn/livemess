@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Livemess</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+	var source = new EventSource("/messages/events");
+	source.addEventListener('messages.create', function(e){
+		var currentUserID = '<%= current_user.id %>';
+		var message = $.parseJSON(e.data);
+		if ( (currentUserID == String(message.sender)) || (currentUserID == String(message.receiver)) ) {			
+			//alert(message.content);
+			//$("#messages").append("<li>" + message.id + ": " + message.sender + " -> " + message.receiver + "<br/>" + message.content + "<br/><%= new_user_registration_path.to_s %></li>");
+			$.ajax({
+				type: 'GET',
+				url: '<%= livenewmess_messages_path %>' + '?id=' + message.id
+			});
+		}
+	});
+});
+</script>
+
+</head>
+<body>
+
+
+<% if user_signed_in? %>
+	<p style="text-align:right">
+		Welcome, <%= current_user.email %> | <%= link_to "Log out", destroy_user_session_path, method: :delete %>
+	</p>
+<% else %>
+	<p>
+		<%= link_to "Log In", new_user_session_path %> | <%= link_to "Register", new_user_registration_path %>
+	</p>
+<% end %>
+
+
+<%= yield %>
+
+</body>
+</html>

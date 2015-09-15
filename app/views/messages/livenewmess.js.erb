@@ -1,0 +1,3 @@
+<%# if (@message.sender == current_user.id) || (@message.receiver == current_user.id) %>
+	$("#messages").append('<%= escape_javascript(render("messages/message")) %>');
+<%# end %>
